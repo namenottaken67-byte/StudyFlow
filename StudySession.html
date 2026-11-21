@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Session</title>
+
+    <style>
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #044309;
+            color: #f7f6f6;
+        }
+
+        .hero {
+            height: 50vh;
+            background-image: linear-gradient(rgba(67, 61, 61, 0.5), rgba(84, 82, 82, 0.5)), url('background7.jpg');
+            background-size: cover;
+            background-color: #f8f6f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav a {
+            color: #edf0ee;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div>Study Session</div>
+        <ul>
+            <li><a href = "index.html">Dashboard</a></li>
+        </ul>
+        <ul>
+            <li><a href = "StudyPlanner.html">Study Planner</a></li>
+        </ul>
+    </nav>
+    
+    <section class="hero"></section>
+
+    <div class = "timer">
+        <h2>Session Timer</h2>
+        <p id = "timer">00:00:00</p>
+
+        <button id = "begin">Start</button>
+        <button id = "pause">Pause</button>
+        <button id = "restart">Reset</button>
+    </div>
+
+    <script>
+        const sessiontimer = document.getElementById('timer');
+        const starttimer = document.getElementById('begin');
+        const pausetimer = document.getElementById('pause');
+        const resettimer = document.getElementById('restart');
+
+        let seconds = 0;
+        let interval = null;
+
+        starttimer.addEventListener('click', function () {
+            if (interval !== null) {
+                return;
+            }
+
+            interval = setInterval(function () {
+                seconds++;
+
+                let minutes = Math.floor(seconds/60);
+                let secondsleft = seconds % 60;
+
+                sessiontimer.textContent = String(minutes).padStart(2, '0') + ":" + String(secondsleft).padStart(2, '0');
+            }, 1000);
+        });
+
+        pausetimer.addEventListener('click', function() {
+            clearInterval(interval);
+            interval = null;
+        });
+
+        resettimer.addEventListener('click', function() {
+            clearInterval(interval);
+            interval = null;
+            seconds = 0;
+            sessiontimer.textContent = "00:00:00";
+        });
+    </script>
+</body>
+</html>

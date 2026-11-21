@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyPlanner</title>
+
+    <style>
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #044309;
+            color: #f7f6f6;
+        }
+
+        .hero {
+            height: 50vh;
+            background-image: linear-gradient(rgba(81, 77, 77, 0.5), rgba(84, 82, 82, 0.5)), url('background3.jpg');
+            background-size: cover;
+            background-color: #f8f6f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav a {
+            color:#edf0ee;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+
+</head>
+<body>
+    <nav>
+        <div>Study Planner</div>
+        <ul>
+            <li><a href="index.html">Dashboard</a></li>
+        </ul>
+        <ul>
+            <li><a href="StudySession.html">Study Session</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+    </section>
+    
+
+    <h1>Add an Assignment</h1>
+
+    <form id="tasks">
+        <label for="name">Task Name</label>
+        <input id="name" type="text" placeholder="ex. Chemistry HW" required>
+
+        <label for="class">What class?</label>
+        <input id="class" type="text" placeholder="ex. Geometry, Algebra" required>
+
+        <label for="deadline">Deadline</label>
+        <input id="deadline" type="date" required>
+
+        <label for="importance">Urgency</label>
+        <select id="importance" required>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+        </select>
+
+        <button type="submit">Attach Task</button>
+    </form>
+
+    <h1>Tasks</h1>
+    <p id="empty">You have no tasks yet.</p>
+    <ul id='taskul'></ul>
+
+    <script>
+        const form = document.getElementById('tasks');
+        const name1 = document.getElementById('name');
+        const class1 = document.getElementById('class');
+        const deadline1 = document.getElementById('deadline');
+        const importance1 = document.getElementById('importance');
+
+        const tasklist = document.getElementById('taskul');
+        const empty1 = document.getElementById('empty');
+
+        let tasks2 = JSON.parse(localStorage.getItem('tasks2')) || [];
+
+        for (let t of tasks2) {
+            if (t.completed === undefined) {
+                t.completed = false;
+            }
+        }
+
+        function showtasks() {
+            tasklist.innerHTML = "";
+
+            for (let assignment of tasks2) {
+                const thing = document.createElement('li');
+                thing.textContent = assignment.name + " - " + assignment.class + " - " + assignment.deadline + " - " + assignment.importance;
+                const markasDone = document.createElement('button');
+                markasDone.textContent = "Mark as Complete";
+                const remove = document.createElement('button');
+                remove.textContent = "Delete";
+                if (assignment.completed) {
+                    markasDone.textContent = "Done";
+                    markasDone.disabled = true;
+                } else {
+                    markasDone.textContent = "Mark as Complete";
+                }
+                tasklist.appendChild(thing);
+                tasklist.appendChild(markasDone);
+                tasklist.appendChild(remove);
+                markasDone.addEventListener('click', function() {
+                    assignment.completed = true;
+                    showtasks();
+                    storetasks();
+                })
+                remove.addEventListener('click', function() {
+                    tasks2 = tasks2.filter(t => t!== assignment);
+                    storetasks();
+                    showtasks();
+                })
+            }
+
+            if (tasks2.length === 0) {
+                empty1.style.display = "block";
+            } else {
+                empty1.style.display = "none";
+            }
+        }
+
+        function storetasks() {
+            localStorage.setItem('tasks2', JSON.stringify(tasks2));
+        }
+
+        showtasks();
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let newTask = {
+                name: name1.value,
+                class: class1.value,
+                deadline: deadline1.value,
+                importance: importance1.value,
+                completed: false
+            }
+            tasks2.push(newTask);
+            console.log(tasks2);
+            storetasks();
+            showtasks();
+        });
+
+    </script>
+</body>
+</html>
